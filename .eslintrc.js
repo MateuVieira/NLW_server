@@ -14,19 +14,21 @@ module.exports = {
   },
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    'project': './tsconfig.json',
-    ecmaVersion: 2020,
-    sourceType: 'module',
-    'ecmaFeatures': {
-      'jsx': true
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+        "jsx": true
     },
-  },
+    "ecmaVersion": 11,
+    "sourceType": "module"
+},
   settings: {
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
     'import/resolver': {
-      typescript: {},
+      typescript: {
+        "alwaysTryTypes": true
+    }
     },
   },
   plugins: [
@@ -48,5 +50,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/state-in-constructor': 'off',
     'import/no-unresolved': 'off',
+    '@typescript-eslint/camelcase': 'off'
   },
 };
