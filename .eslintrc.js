@@ -50,6 +50,7 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'react/state-in-constructor': 'off',
     'import/no-unresolved': 'off',
-    '@typescript-eslint/camelcase': 'off'
+    '@typescript-eslint/camelcase': 'off',
+    "suppressImplicitAnyIndexErrors": true
   },
 };
