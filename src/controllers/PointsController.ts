@@ -2,6 +2,41 @@ import { Request, Response } from 'express';
 import knex from '../database/connection';
 
 class PointsCOntroller {
+  async index(req: Request, res: Response) {
+    const { city, uf, items } = req.query;
+
+    const parsedItems = String(items)
+      .split(',')
+      .map(item => Number(item.trim()));
+
+    const points = await knex('points')
+      .join('point_items', 'points.id', '=', 'point_items.point_id')
+      .whereIn('point_items.item.id', parsedItems)
+      .where('city', String(city))
+      .where('uf', String(uf))
+      .distinct()
+      .select('points.*');
+
+    return res.json(points);
+  };
+
+  async show(req: Request, res: Response) {
+    const { id } = req.params;
+
+    const point = await knex('points').where('id', id).first();
+
+    if(!point) return res.status(400).json({message: 'Point not found'});
+
+    const items = await knex('items')
+      .join('point_items', 'items.id', '=', 'point_items.items.id')
+      .where('point_items.point_id', id).select('title');
+
+    return res.json({
+      point,
+      items,
+    });
+  };
+
   async create(req: Request, res: Response) {
     const {
       name,
@@ -37,6 +72,8 @@ class PointsCOntroller {
     }));
   
     await trx('point_items').insert(pointItems);
+
+    await trx.commit();
   
     return res.json({ 
       point_id,
@@ -44,22 +81,7 @@ class PointsCOntroller {
     });
   };
 
-  async show(req: Request, res: Response) {
-    const { id } = req.params;
-
-    const point = await knex('points').where('id', id).first();
-
-    if(!point) return res.status(400).json({message: 'Point not found'});
-
-    const items = await knex('items')
-      .join('point_items', 'items.id', '=', 'point_items.items.id')
-      .where('point_items.point_id', id).select('title');
-
-    return res.json({
-      point,
-      items,
-    });
-  };
+ 
 };
 
 export default PointsCOntroller;

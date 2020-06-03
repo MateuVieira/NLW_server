@@ -13,6 +13,7 @@ routes.get('/', (req, res) => {
 
 routes.get('/items', itemsCOntroller.index);
 
+routes.get('/points', pointsController.index);
 routes.get('/points/:id', pointsController.show);
 routes.post('/points', pointsController.create);
 
